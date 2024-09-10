@@ -22,7 +22,7 @@ jobs:
         with:
           path: |
             /usr/local/bin/godot
-            .local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable
+            home/runner/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable
           key: godot-${{ env.GODOT_VERSION }}
           restore-keys: godot-
 
@@ -35,7 +35,7 @@ jobs:
           mv Godot_v* /usr/local/bin/godot
           godot --version --headless 
           
-          templates_dir=".local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable"
+          templates_dir="/home/runner/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable"
           templates_url="https://downloads.tuxfamily.org/godotengine/${{ env.GODOT_VERSION }}/Godot_v${{ env.GODOT_VERSION }}-stable_export_templates.tpz"
           mkdir -p "${templates_dir}"
           wget -q ${templates_url} -O templates.tpz 
@@ -50,14 +50,14 @@ jobs:
 
       - name: game-build-linux
         run: |
-          file .local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable/linux_release.x86_64
-          file .local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable/linux_debug.x86_64
+          file /home/runner/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable/linux_release.x86_64
+          file /home/runner/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable/linux_debug.x86_64
           godot --headless --export-release "Linux/X11" build/game.x86_64
 
       - name: game-build-macos
         continue-on-error: true
         run: |
-          file .local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable/macos.zip
+          file /home/runner/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable/macos.zip
           godot --headless --export-release "macOS" build/game.dmg || true
 
       - name: export
