@@ -21,8 +21,8 @@ jobs:
         run: |
           mkdir /opt/godot && cd /opt/godot
           wget -q "https://github.com/godotengine/godot/releases/download/${{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64.zip" -O godot.zip
-          unzip godot.zip
-          ln -s "Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64" /usr/local/bin/godot
+          unzip godot.zip && rm godot.zip
+          mv Godot_v* /usr/local/bin/godot
           godot --version --headless 
 
       - name: game-build
