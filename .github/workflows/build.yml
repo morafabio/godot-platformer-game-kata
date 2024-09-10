@@ -16,16 +16,21 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v4
+
       - name: godot-setup
         run: |
-          wget https://github.com/godotengine/godot/releases/download/${{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64.zip -O /tmp/godot.zip
-          unzip /tmp/godot.zip
-          ln -s Godot_v${GODOT_VERSION}-stable_linux_headless.64 /bin/godot
+          mkdir /opt/godot && cd /opt/godot
+          wget -q "https://github.com/godotengine/godot/releases/download/${{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64.zip" -O godot.zip
+          unzip godot.zip
+          mv "Godot_v${GODOT_VERSION}-stable_linux_headless.64" /usr/local/bin/godot
+          chmod +x /usr/local/bin/godot
           godot -v
+
       - name: game-build
         run: |
           mkdir -p build
           godot --headless --export "Linux/X11" build/game.x86_64 --quiet
+
       - name: export
         uses: actions/upload-artifact@v4
         with:
