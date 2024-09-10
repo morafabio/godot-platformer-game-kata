@@ -24,7 +24,7 @@ jobs:
           unzip godot.zip
           mv Godot* /usr/local/bin/godot
           chmod +x /usr/local/bin/godot
-          godot -v
+          godot --headless -v
 
       - name: game-build
         run: |
