@@ -22,7 +22,7 @@ jobs:
           mkdir /opt/godot && cd /opt/godot
           wget -q "https://github.com/godotengine/godot/releases/download/${{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64.zip" -O godot.zip
           unzip godot.zip
-          mv "Godot_v${GODOT_VERSION}-stable_linux_headless.64" /usr/local/bin/godot
+          mv Godot* /usr/local/bin/godot
           chmod +x /usr/local/bin/godot
           godot -v
 
