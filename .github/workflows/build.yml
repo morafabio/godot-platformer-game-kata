@@ -24,6 +24,15 @@ jobs:
           unzip godot.zip && rm godot.zip
           mv Godot_v* /usr/local/bin/godot
           godot --version --headless 
+          
+          templates_dir="~/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable"
+          templates_url="https://downloads.tuxfamily.org/godotengine/${{ env.GODOT_VERSION }}/Godot_v${{ env.GODOT_VERSION }}-stable_export_templates.tpz"
+          mkdir -p "${templates_dir}"
+          wget -q ${templates_url} -O templates.tpz 
+          unzip templates.tpz -d /opt/godot && rm templates.tpz
+          mv /opt/godot/templates/* "${templates_dir}"
+          ls -lah "${templates_dir}"
+          
 
       - name: game-build
         run: |
