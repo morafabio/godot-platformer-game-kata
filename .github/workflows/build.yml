@@ -22,14 +22,13 @@ jobs:
           mkdir /opt/godot && cd /opt/godot
           wget -q "https://github.com/godotengine/godot/releases/download/${{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64.zip" -O godot.zip
           unzip godot.zip
-          mv Godot* /usr/local/bin/godot
-          chmod +x /usr/local/bin/godot
+          ln -s "Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64" /usr/local/bin/godot
           godot --version --headless 
 
       - name: game-build
         run: |
-          mkdir -p build
-          godot --headless --export-release "Linux/X11" build/my_game.x86_64 --quiet
+          mkdir -p build/
+          godot --headless --export-release "Linux/X11" build/my_game.x86_64
 
       - name: export
         uses: actions/upload-artifact@v4
