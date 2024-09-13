@@ -7,7 +7,7 @@ on:
       - build-*
 
 env:
-  GODOT_VERSION: '4.3'
+  GODOT_VERSION: '4.1.1'
 
 jobs:
   build-linux:
@@ -49,7 +49,7 @@ jobs:
 
       - name: Install Godot
         run: |
-          wget https://downloads.tuxfamily.org/godotengine/${{ env.GODOT_VERSION }}/Godot_v${{ env.GODOT_VERSION }}-stable_osx.universal.zip -O godot.zip
+          wget https://downloads.tuxfamily.org/godotengine/${{ env.GODOT_VERSION }}/Godot_v${{ env.GODOT_VERSION }}-stable_macos.universal.zip -O godot.zip
           unzip godot.zip -d godot
           sudo mv godot/Godot.app /Applications/Godot.app
           ln -s /Applications/Godot.app/Contents/MacOS/Godot /usr/local/bin/godot
