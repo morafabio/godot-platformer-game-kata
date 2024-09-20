@@ -25,33 +25,18 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
 
-      - name: cache
-        id: cache-linux
-        uses: actions/cache@v4
-        with:
-          path: |
-            /opt/godot
-          key: godot-linux
-
       - name: setup
-        if: ${{ steps.cache-linux.outputs.cache-hit != 'true' }}
         run: |
           mkdir /opt/godot && cd /opt/godot
           wget -q "${godot_url}" -O godot.zip
           unzip godot.zip && rm godot.zip
-          
           wget -q ${templates_url} -O templates.tpz
           unzip templates.tpz -d /opt/godot && rm templates.tpz
-          rm -vrf /opt/godot/templates/windows_*
-          rm -vrf /opt/godot/templates/web_*
-          rm -vrf /opt/godot/templates/ios_*
-          rm -vrf /opt/godot/templates/android_*
 
       - name: configure
         run: |
           mv /opt/godot/Godot_v4.3-stable_linux.x86_64 /usr/local/bin/godot
-          godot --version --headless
-          
+          godot --version --headless          
           mkdir -p "${templates_dir}"
           mv /opt/godot/templates/* "${templates_dir}"
           file /home/runner/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable/linux_release.x86_64
@@ -78,32 +63,16 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
 
-      - name: cache
-        id: cache-mac
-        uses: actions/cache@v4
-        with:
-          path: |
-            /Users/runner/godot
-          key: godot-mac
-
       - name: setup
-        if: ${{ steps.cache-mac.outputs.cache-hit != 'true' }}
         run: |
           mkdir -p /Users/runner/godot && cd /Users/runner/godot
           wget -q "${godot_url}" -O godot.zip
           unzip godot.zip && rm godot.zip
-          
           wget -q ${templates_url} -O templates.tpz
           unzip templates.tpz -d /Users/runner/godot && rm templates.tpz
-          rm -vrf /Users/runner/godot/templates/windows_*
-          rm -vrf /Users/runner/godot/templates/web_*
-          rm -vrf /Users/runner/godot/templates/ios_*
-          rm -vrf /Users/runner/godot/templates/android_*
-          ls -lah /Users/runner/godot
 
       - name: configure
         run: |
-          ls -lah /Users/runner/godot
           sudo mv /Users/runner/godot/Godot.app /Applications/Godot.app
           sudo ln -s /Applications/Godot.app/Contents/MacOS/Godot /usr/local/bin/godot
           godot --version --headless
