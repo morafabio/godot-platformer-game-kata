@@ -25,7 +25,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: |
-            /opt/godot
+            /opt/godot/*
           key: godot-${{ env.GODOT_VERSION }}-linux
 
       - name: setup
@@ -74,7 +74,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: |
-            /opt/godot
+            /opt/godot/*
           key: godot-${{ env.GODOT_VERSION }}-mac
 
       - name: setup
