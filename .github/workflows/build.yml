@@ -6,6 +6,10 @@ on:
       - main
       - build-*
 
+concurrency:
+  cancel-in-progress: true
+  group: build
+
 env:
   GODOT_VERSION: '4.3'
 
@@ -70,8 +74,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: |
-            /Applications/Godot.app
-            /home/runner/.local/share/godot/export_templates/
+            /opt/godot
           key: godot-${{ env.GODOT_VERSION }}-mac
 
       - name: setup
@@ -79,7 +82,7 @@ jobs:
         run: |
           sudo mkdir /opt/godot && sudo chown -R $USER: /opt/godot
           cd /opt/godot
-          wget -q "https://github.com/godotengine/godot/releases/download/${{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64.zip" -O godot.zip
+          wget -q "https://downloads.tuxfamily.org/godotengine/${{ env.GODOT_VERSION }}/Godot_v${{ env.GODOT_VERSION }}-stable_macos.universal.zip" -O godot.zip
           unzip godot.zip && rm godot.zip
           
           templates_url="https://downloads.tuxfamily.org/godotengine/${{ env.GODOT_VERSION }}/Godot_v${{ env.GODOT_VERSION }}-stable_export_templates.tpz"
