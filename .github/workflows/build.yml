@@ -15,44 +15,6 @@ env:
   templates_url: "https://downloads.tuxfamily.org/godotengine/4.3/Godot_v4.3-stable_export_templates.tpz"
 
 jobs:
-  configure:
-    runs-on: ubuntu-latest
-    steps:
-      - name: cache
-        id: cache-multiplatform
-        uses: actions/cache@v4
-        with:
-          path: |
-            /opt/godot/*
-          key: godot-multiplatform
-
-      - name: setup
-        if: ${{ steps.cache-multiplatform.outputs.cache-hit != 'true' }}
-        run: |
-          sudo mkdir /opt/godot && sudo chown -R $USER: /opt/godot
-          cd /opt/godot
-          
-          wget -q "https://github.com/godotengine/godot/releases/download/4.3-stable/Godot_v4.3-stable_linux.x86_64.zip" -O godot.zip
-          unzip godot.zip && rm godot.zip
-
-          wget -q "https://downloads.tuxfamily.org/godotengine/4.3/Godot_v4.3-stable_macos.universal.zip" -O godot.zip
-          unzip godot.zip && rm godot.zip
-
-          wget -q ${templates_url} -O templates.tpz
-          unzip templates.tpz -d /opt/godot && rm templates.tpz
-          rm -rf /opt/godot/templates/windows_*
-          rm -rf /opt/godot/templates/web_*
-          rm -rf /opt/godot/templates/ios_*
-          rm -rf /opt/godot/templates/android_*
-          
-
-      - name: godot-environment
-        uses: actions/upload-artifact@v4
-        with:
-          name: godot-environment
-          path: /opt/godot
-          retention-days: 1
-
   build-linux:
     runs-on: ubuntu-latest
     env:
@@ -62,11 +24,24 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
 
-      - name: godot-environment
-        uses: actions/download-artifact@v3
+      - name: cache
+        id: cache-linux
+        uses: actions/cache@v3
         with:
-          name: godot-environment
-          path: /opt/godot
+          path: |
+            /opt/godot/*
+          key: godot-linux
+
+      - name: setup
+        if: ${{ steps.cache-linux.outputs.cache-hit != 'true' }}
+        run: |
+          sudo mkdir /opt/godot && sudo chown -R $USER: /opt/godot
+          cd /opt/godot
+          wget -q "${godot_url}" -O godot.zip
+          unzip godot.zip && rm godot.zip
+          
+          wget -q ${templates_url} -O templates.tpz
+          unzip templates.tpz -d /opt/godot && rm templates.tpz
 
       - name: configure
         run: |
@@ -99,11 +74,24 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
 
-      - name: godot-environment
-        uses: actions/download-artifact@v3
+      - name: cache
+        id: cache-mac
+        uses: actions/cache@v3
         with:
-          name: godot-environment
-          path: /opt/godot
+          path: |
+            /opt/godot/*
+          key: godot-mac
+
+      - name: setup
+        if: ${{ steps.cache-mac.outputs.cache-hit != 'true' }}
+        run: |
+          sudo mkdir /opt/godot && sudo chown -R $USER: /opt/godot
+          cd /opt/godot
+          wget -q "${godot_url}" -O godot.zip
+          unzip godot.zip && rm godot.zip
+          
+          wget -q ${templates_url} -O templates.tpz
+          unzip templates.tpz -d /opt/godot && rm templates.tpz
 
       - name: configure
         run: |
