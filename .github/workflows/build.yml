@@ -83,26 +83,28 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-            ./godot
+            /Users/runner/godot
           key: godot-mac
 
       - name: setup
         if: ${{ steps.cache-mac.outputs.cache-hit != 'true' }}
         run: |
-          mkdir ./godot && cd ./godot
+          mkdir -p /Users/runner/godot && cd /Users/runner/godot
           wget -q "${godot_url}" -O godot.zip
           unzip godot.zip && rm godot.zip
           
           wget -q ${templates_url} -O templates.tpz
-          unzip templates.tpz -d ./ && rm templates.tpz
-          rm -vrf ./templates/windows_*
-          rm -vrf ./templates/web_*
-          rm -vrf ./templates/ios_*
-          rm -vrf ./templates/android_*
+          unzip templates.tpz -d /Users/runner/godot && rm templates.tpz
+          rm -vrf /Users/runner/godot/templates/windows_*
+          rm -vrf /Users/runner/godot/templates/web_*
+          rm -vrf /Users/runner/godot/templates/ios_*
+          rm -vrf /Users/runner/godot/templates/android_*
+          ls --lah /Users/runner/godot
 
       - name: configure
         run: |
-          sudo mv ./godot/Godot.app /Applications/Godot.app
+          ls --lah /Users/runner/godot
+          sudo mv /Users/runner/godot/Godot.app /Applications/Godot.app
           sudo ln -s /Applications/Godot.app/Contents/MacOS/Godot /usr/local/bin/godot
           godot --version --headless
           mkdir -p "${templates_dir}"
