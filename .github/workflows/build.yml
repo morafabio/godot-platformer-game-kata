@@ -17,39 +17,38 @@ jobs:
         uses: actions/checkout@v4
 
       - name: cache
+        id: cache-linux
         uses: actions/cache@v3
         with:
           path: |
-            /usr/local/bin/godot
-            /home/runner/.local/share/godot
+            /opt/godot
           key: godot-${{ env.GODOT_VERSION }}-linux
 
       - name: setup
-        if: ${{ steps.cache.outputs.cache-hit != 'true' }}
+        if: ${{ steps.cache-linux.outputs.cache-hit != 'true' }}
         run: |
           mkdir /opt/godot && cd /opt/godot
           wget -q "https://github.com/godotengine/godot/releases/download/${{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64.zip" -O godot.zip
           unzip godot.zip && rm godot.zip
-          mv Godot_v* /usr/local/bin/godot
           
-          templates_dir="/home/runner/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable"
           templates_url="https://downloads.tuxfamily.org/godotengine/${{ env.GODOT_VERSION }}/Godot_v${{ env.GODOT_VERSION }}-stable_export_templates.tpz"
-          mkdir -p "${templates_dir}"
-          wget -q ${templates_url} -O templates.tpz 
+          wget -q ${templates_url} -O templates.tpz
           unzip templates.tpz -d /opt/godot && rm templates.tpz
-          mv /opt/godot/templates/* "${templates_dir}"
-          ls -lah "${templates_dir}"       
 
       - name: configure
         run: |
-          godot --version --headless 
-          cat export_presets.cfg | grep -e "^name="
+          mv /opt/godot/Godot_v* /usr/local/bin/godot
+          godot --version --headless
+          
+          templates_dir="/home/runner/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable"
+          mkdir -p "${templates_dir}"
+          mv /opt/godot/templates/* "${templates_dir}"
           file /home/runner/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable/linux_release.x86_64
           file /home/runner/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable/linux_debug.x86_64
-          mkdir -p build/
 
       - name: build
         run: |
+          mkdir -p build/
           godot --headless --export-release "Linux/X11"
 
       - name: export
@@ -66,6 +65,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: cache
+        id: cache-mac
         uses: actions/cache@v3
         with:
           path: |
@@ -74,26 +74,30 @@ jobs:
           key: godot-${{ env.GODOT_VERSION }}-mac
 
       - name: setup
+        if: ${{ steps.cache-mac.outputs.cache-hit != 'true' }}
         run: |
-          wget -q https://downloads.tuxfamily.org/godotengine/${{ env.GODOT_VERSION }}/Godot_v${{ env.GODOT_VERSION }}-stable_macos.universal.zip -O godot.zip
-          unzip godot.zip -d godot
-          sudo mv godot/Godot.app /Applications/Godot.app
-
-          templates_dir="$HOME/Library/Application Support/Godot/templates/${{ env.GODOT_VERSION }}.stable"
-          wget -q https://downloads.tuxfamily.org/godotengine/${{ env.GODOT_VERSION }}/Godot_v${{ env.GODOT_VERSION }}-stable_export_templates.tpz -O templates.tpz
-          mkdir -p "$HOME/Library/Application Support/Godot/templates/${{ env.GODOT_VERSION }}.stable"
-          tar -xf templates.tpz -C "${templates_dir}"
-          ls -lah "${templates_dir}"
+          mkdir /opt/godot && cd /opt/godot
+          wget -q "https://github.com/godotengine/godot/releases/download/${{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64.zip" -O godot.zip
+          unzip godot.zip && rm godot.zip
+          
+          templates_url="https://downloads.tuxfamily.org/godotengine/${{ env.GODOT_VERSION }}/Godot_v${{ env.GODOT_VERSION }}-stable_export_templates.tpz"
+          wget -q ${templates_url} -O templates.tpz
+          unzip templates.tpz -d /opt/godot && rm templates.tpz
 
       - name: configure
         run: |
+          sudo mv /opt/godot/godot/Godot.app /Applications/Godot.app
           ln -s /Applications/Godot.app/Contents/MacOS/Godot /usr/local/bin/godot
           godot --version --headless
-          cat export_presets.cfg | grep -e "^name="
-          mkdir -p build/
+          
+          templates_dir="/Users/runner/Library/Application Support/Godot/export_templates/4.3.stable/"          
+          mkdir -p "${templates_dir}"
+          mv /opt/godot/templates/macos.zip "${templates_dir}/macos.zip"
+          file "${templates_dir}/macos.zip"
 
       - name: build
         run: |
+          mkdir -p build/
           godot --headless --export-release "macOS"
 
       - name: export
