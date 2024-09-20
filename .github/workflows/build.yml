@@ -42,7 +42,7 @@ jobs:
 
       - name: configure
         run: |
-          mv /opt/godot/Godot_v* /usr/local/bin/godot
+          mv /opt/godot/Godot_v4.3-stable_linux.x86_64 /usr/local/bin/godot
           godot --version --headless
           
           templates_dir="/home/runner/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable"
