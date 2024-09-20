@@ -27,7 +27,7 @@ jobs:
       - name: setup
         if: ${{ steps.cache-linux.outputs.cache-hit != 'true' }}
         run: |
-          sudo mkdir /opt/godot && sudo chown -R $USER:$USER /opt/godot
+          sudo mkdir /opt/godot && sudo chown -R $USER: /opt/godot
           cd /opt/godot
           wget -q "https://github.com/godotengine/godot/releases/download/${{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64.zip" -O godot.zip
           unzip godot.zip && rm godot.zip
@@ -77,7 +77,7 @@ jobs:
       - name: setup
         if: ${{ steps.cache-mac.outputs.cache-hit != 'true' }}
         run: |
-          sudo mkdir /opt/godot && sudo chown -R $USER:$USER /opt/godot
+          sudo mkdir /opt/godot && sudo chown -R $USER: /opt/godot
           cd /opt/godot
           wget -q "https://github.com/godotengine/godot/releases/download/${{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64.zip" -O godot.zip
           unzip godot.zip && rm godot.zip
