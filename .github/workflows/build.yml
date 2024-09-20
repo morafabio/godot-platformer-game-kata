@@ -23,7 +23,6 @@ jobs:
             /usr/local/bin/godot
             /home/runner/.local/share/godot
           key: godot-${{ env.GODOT_VERSION }}-linux
-          restore-keys: godot-
 
       - name: setup
         if: ${{ steps.cache.outputs.cache-hit != 'true' }}
@@ -45,12 +44,12 @@ jobs:
         run: |
           godot --version --headless 
           cat export_presets.cfg | grep -e "^name="
+          file /home/runner/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable/linux_release.x86_64
+          file /home/runner/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable/linux_debug.x86_64
           mkdir -p build/
 
       - name: build
         run: |
-          file /home/runner/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable/linux_release.x86_64
-          file /home/runner/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable/linux_debug.x86_64
           godot --headless --export-release "Linux/X11"
 
       - name: export
@@ -73,7 +72,6 @@ jobs:
             /Applications/Godot.app
             /home/runner/.local/share/godot/export_templates/
           key: godot-${{ env.GODOT_VERSION }}-mac
-          restore-keys: godot-
 
       - name: setup
         run: |
@@ -84,7 +82,7 @@ jobs:
           templates_dir="$HOME/Library/Application Support/Godot/templates/${{ env.GODOT_VERSION }}.stable"
           wget -q https://downloads.tuxfamily.org/godotengine/${{ env.GODOT_VERSION }}/Godot_v${{ env.GODOT_VERSION }}-stable_export_templates.tpz -O templates.tpz
           mkdir -p "$HOME/Library/Application Support/Godot/templates/${{ env.GODOT_VERSION }}.stable"
-          tar -xf templates.tpz -C ${templates_dir}
+          tar -xf templates.tpz -C "${templates_dir}"
           ls -lah "${templates_dir}"
 
       - name: configure
@@ -96,7 +94,6 @@ jobs:
 
       - name: build
         run: |
-          file /home/runner/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable/linux_debug.macOS
           godot --headless --export-release "macOS"
 
       - name: export
