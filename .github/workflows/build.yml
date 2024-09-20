@@ -38,8 +38,6 @@ jobs:
           godot --version --headless          
           mkdir -p "${templates_dir}"
           mv /opt/godot/templates/* "${templates_dir}"
-          file "${templates_dir}/4.3.stable/linux_release.x86_64"
-          file "${templates_dir}/4.3.stable/linux_debug.x86_64"
 
       - name: build
         run: |
