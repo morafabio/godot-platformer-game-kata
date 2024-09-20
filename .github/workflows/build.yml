@@ -35,8 +35,7 @@ jobs:
       - name: setup
         if: ${{ steps.cache-linux.outputs.cache-hit != 'true' }}
         run: |
-          sudo mkdir /opt/godot && sudo chown -R $USER: /opt/godot
-          cd /opt/godot
+          mkdir /opt/godot && cd /opt/godot
           wget -q "${godot_url}" -O godot.zip
           unzip godot.zip && rm godot.zip
           
@@ -56,10 +55,12 @@ jobs:
           mv /opt/godot/templates/* "${templates_dir}"
           file /home/runner/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable/linux_release.x86_64
           file /home/runner/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable/linux_debug.x86_64
+
       - name: build
         run: |
           mkdir -p build/
           godot --headless --export-release "Linux/X11"
+
       - name: export
         uses: actions/upload-artifact@v4
         with:
@@ -80,37 +81,37 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-            /opt/godot
+            ./godot
           key: godot-mac
 
       - name: setup
         if: ${{ steps.cache-mac.outputs.cache-hit != 'true' }}
         run: |
-          sudo mkdir /opt/godot && sudo chown -R $USER: /opt/godot
-          cd /opt/godot
+          mkdir ./godot && cd ./godot
           wget -q "${godot_url}" -O godot.zip
           unzip godot.zip && rm godot.zip
           
           wget -q ${templates_url} -O templates.tpz
-          unzip templates.tpz -d /opt/godot && rm templates.tpz
-          rm -vrf /opt/godot/templates/windows_*
-          rm -vrf /opt/godot/templates/web_*
-          rm -vrf /opt/godot/templates/ios_*
-          rm -vrf /opt/godot/templates/android_*
+          unzip templates.tpz -d ./ && rm templates.tpz
+          rm -vrf ./templates/windows_*
+          rm -vrf ./templates/web_*
+          rm -vrf ./templates/ios_*
+          rm -vrf ./templates/android_*
 
       - name: configure
         run: |
-          sudo mv /opt/godot/Godot.app /Applications/Godot.app
+          sudo mv ./godot/Godot.app /Applications/Godot.app
           sudo ln -s /Applications/Godot.app/Contents/MacOS/Godot /usr/local/bin/godot
-          godot --version --headless        
-          
+          godot --version --headless
           mkdir -p "${templates_dir}"
-          mv /opt/godot/templates/macos.zip "${templates_dir}/macos.zip"
+          mv ./godot/templates/macos.zip "${templates_dir}/macos.zip"
           file "${templates_dir}/macos.zip"
+
       - name: build
         run: |
           mkdir -p build/
           godot --headless --export-release "macOS"
+
       - name: export
         uses: actions/upload-artifact@v4
         with:
