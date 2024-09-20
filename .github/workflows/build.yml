@@ -10,7 +10,7 @@ env:
   GODOT_VERSION: '4.3'
 
 jobs:
-  build:
+  build-linux:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
