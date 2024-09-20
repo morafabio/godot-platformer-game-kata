@@ -47,7 +47,7 @@ jobs:
       - name: export
         uses: actions/upload-artifact@v4
         with:
-          name: build-x86_64
+          name: build-linux-x86_64
           path: |
             build/*
 
