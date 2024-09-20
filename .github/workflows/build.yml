@@ -99,11 +99,11 @@ jobs:
           rm -vrf /Users/runner/godot/templates/web_*
           rm -vrf /Users/runner/godot/templates/ios_*
           rm -vrf /Users/runner/godot/templates/android_*
-          ls --lah /Users/runner/godot
+          ls -lah /Users/runner/godot
 
       - name: configure
         run: |
-          ls --lah /Users/runner/godot
+          ls -lah /Users/runner/godot
           sudo mv /Users/runner/godot/Godot.app /Applications/Godot.app
           sudo ln -s /Applications/Godot.app/Contents/MacOS/Godot /usr/local/bin/godot
           godot --version --headless
