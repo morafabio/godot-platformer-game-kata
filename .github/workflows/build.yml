@@ -54,16 +54,15 @@ jobs:
 
   build-linux:
     runs-on: ubuntu-latest
-    needs: [configure]
+    needs: [ configure ]
     env:
-      godot_url: "https://github.com/godotengine/godot/releases/download/4.3-stable/Godot_v4.3-stable_linux.x86_64.zip"
       templates_dir: "/home/runner/.local/share/godot/export_templates/4.3.stable"
     steps:
       - name: checkout
         uses: actions/checkout@v4
 
       - name: godot-environment
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: godot-environment
           path: /opt/godot
@@ -94,14 +93,13 @@ jobs:
     runs-on: macos-latest
     needs: [ configure ]
     env:
-      godot_url: "https://downloads.tuxfamily.org/godotengine/4.3/Godot_v4.3-stable_macos.universal.zip"
       templates_dir: "/Users/runner/Library/Application Support/Godot/export_templates/4.3.stable/"
     steps:
       - name: checkout
         uses: actions/checkout@v4
 
       - name: godot-environment
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: godot-environment
           path: /opt/godot
