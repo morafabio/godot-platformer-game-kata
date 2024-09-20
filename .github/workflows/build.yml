@@ -12,10 +12,14 @@ concurrency:
 
 env:
   GODOT_VERSION: '4.3'
+  templates_url: "https://downloads.tuxfamily.org/godotengine/4.3/Godot_v4.3-stable_export_templates.tpz"
 
 jobs:
   build-linux:
     runs-on: ubuntu-latest
+    env:
+      godot_url: "https://github.com/godotengine/godot/releases/download/${{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64.zip"
+      templates_dir: "/home/runner/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable"
     steps:
       - name: checkout
         uses: actions/checkout@v4
@@ -33,10 +37,9 @@ jobs:
         run: |
           sudo mkdir /opt/godot && sudo chown -R $USER: /opt/godot
           cd /opt/godot
-          wget -q "https://github.com/godotengine/godot/releases/download/${{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64.zip" -O godot.zip
+          wget -q "${godot_url}" -O godot.zip
           unzip godot.zip && rm godot.zip
           
-          templates_url="https://downloads.tuxfamily.org/godotengine/${{ env.GODOT_VERSION }}/Godot_v${{ env.GODOT_VERSION }}-stable_export_templates.tpz"
           wget -q ${templates_url} -O templates.tpz
           unzip templates.tpz -d /opt/godot && rm templates.tpz
 
@@ -45,7 +48,6 @@ jobs:
           mv /opt/godot/Godot_v4.3-stable_linux.x86_64 /usr/local/bin/godot
           godot --version --headless
           
-          templates_dir="/home/runner/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable"
           mkdir -p "${templates_dir}"
           mv /opt/godot/templates/* "${templates_dir}"
           file /home/runner/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable/linux_release.x86_64
@@ -65,6 +67,9 @@ jobs:
 
   build-macos:
     runs-on: macos-latest
+    env:
+      godot_url: "https://downloads.tuxfamily.org/godotengine/${{ env.GODOT_VERSION }}/Godot_v${{ env.GODOT_VERSION }}-stable_macos.universal.zip"
+      templates_dir: "/Users/runner/Library/Application Support/Godot/export_templates/4.3.stable/"
     steps:
       - name: checkout
         uses: actions/checkout@v4
@@ -82,20 +87,18 @@ jobs:
         run: |
           sudo mkdir /opt/godot && sudo chown -R $USER: /opt/godot
           cd /opt/godot
-          wget -q "https://downloads.tuxfamily.org/godotengine/${{ env.GODOT_VERSION }}/Godot_v${{ env.GODOT_VERSION }}-stable_macos.universal.zip" -O godot.zip
+          wget -q "${godot_url}" -O godot.zip
           unzip godot.zip && rm godot.zip
           
-          templates_url="https://downloads.tuxfamily.org/godotengine/${{ env.GODOT_VERSION }}/Godot_v${{ env.GODOT_VERSION }}-stable_export_templates.tpz"
           wget -q ${templates_url} -O templates.tpz
           unzip templates.tpz -d /opt/godot && rm templates.tpz
 
       - name: configure
         run: |
-          sudo mv /opt/godot/godot/Godot.app /Applications/Godot.app
-          ln -s /Applications/Godot.app/Contents/MacOS/Godot /usr/local/bin/godot
-          godot --version --headless
+          sudo mv /opt/godot/Godot.app /Applications/Godot.app
+          sudo ln -s /Applications/Godot.app/Contents/MacOS/Godot /usr/local/bin/godot
+          godot --version --headless        
           
-          templates_dir="/Users/runner/Library/Application Support/Godot/export_templates/4.3.stable/"          
           mkdir -p "${templates_dir}"
           mv /opt/godot/templates/macos.zip "${templates_dir}/macos.zip"
           file "${templates_dir}/macos.zip"
