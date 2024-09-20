@@ -18,8 +18,8 @@ jobs:
   build-linux:
     runs-on: ubuntu-latest
     env:
-      godot_url: "https://github.com/godotengine/godot/releases/download/${{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64.zip"
-      templates_dir: "/home/runner/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable"
+      godot_url: "https://github.com/godotengine/godot/releases/download/4.3-stable/Godot_v4.3-stable_linux.x86_64.zip"
+      templates_dir: "/home/runner/.local/share/godot/export_templates/4.3.stable"
     steps:
       - name: checkout
         uses: actions/checkout@v4
@@ -30,7 +30,7 @@ jobs:
         with:
           path: |
             /opt/godot/*
-          key: godot-${{ env.GODOT_VERSION }}-linux
+          key: godot-linux
 
       - name: setup
         if: ${{ steps.cache-linux.outputs.cache-hit != 'true' }}
@@ -68,7 +68,7 @@ jobs:
   build-macos:
     runs-on: macos-latest
     env:
-      godot_url: "https://downloads.tuxfamily.org/godotengine/${{ env.GODOT_VERSION }}/Godot_v${{ env.GODOT_VERSION }}-stable_macos.universal.zip"
+      godot_url: "https://downloads.tuxfamily.org/godotengine/4.3/Godot_v4.3-stable_macos.universal.zip"
       templates_dir: "/Users/runner/Library/Application Support/Godot/export_templates/4.3.stable/"
     steps:
       - name: checkout
@@ -80,7 +80,7 @@ jobs:
         with:
           path: |
             /opt/godot/*
-          key: godot-${{ env.GODOT_VERSION }}-mac
+          key: godot-mac
 
       - name: setup
         if: ${{ steps.cache-mac.outputs.cache-hit != 'true' }}
