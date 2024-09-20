@@ -35,7 +35,7 @@ jobs:
       - name: configure
         run: |
           mv /opt/godot/Godot_v4.3-stable_linux.x86_64 /usr/local/bin/godot
-          godot --version --headless          
+          godot --version --headless
           mkdir -p "${templates_dir}"
           mv /opt/godot/templates/* "${templates_dir}"
 
