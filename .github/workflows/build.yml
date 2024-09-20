@@ -42,6 +42,11 @@ jobs:
           
           wget -q ${templates_url} -O templates.tpz
           unzip templates.tpz -d /opt/godot && rm templates.tpz
+          rm -vrf /opt/godot/templates/windows_*
+          rm -vrf /opt/godot/templates/web_*
+          rm -vrf /opt/godot/templates/ios_*
+          rm -vrf /opt/godot/templates/android_*
+
       - name: configure
         run: |
           mv /opt/godot/Godot_v4.3-stable_linux.x86_64 /usr/local/bin/godot
@@ -88,6 +93,11 @@ jobs:
           
           wget -q ${templates_url} -O templates.tpz
           unzip templates.tpz -d /opt/godot && rm templates.tpz
+          rm -vrf /opt/godot/templates/windows_*
+          rm -vrf /opt/godot/templates/web_*
+          rm -vrf /opt/godot/templates/ios_*
+          rm -vrf /opt/godot/templates/android_*
+
       - name: configure
         run: |
           sudo mv /opt/godot/Godot.app /Applications/Godot.app
