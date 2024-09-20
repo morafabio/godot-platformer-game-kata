@@ -65,15 +65,15 @@ jobs:
 
       - name: setup
         run: |
-          mkdir -p /Users/runner/godot && cd /Users/runner/godot
+          mkdir -p /opt/godot && cd /opt/godot
           wget -q "${godot_url}" -O godot.zip
           unzip godot.zip && rm godot.zip
           wget -q ${templates_url} -O templates.tpz
-          unzip templates.tpz -d /Users/runner/godot && rm templates.tpz
+          unzip templates.tpz -d /opt/godot && rm templates.tpz
 
       - name: configure
         run: |
-          sudo mv /Users/runner/godot/Godot.app /Applications/Godot.app
+          sudo mv /opt/godot/Godot.app /Applications/Godot.app
           sudo ln -s /Applications/Godot.app/Contents/MacOS/Godot /usr/local/bin/godot
           godot --version --headless
           mkdir -p "${templates_dir}"
