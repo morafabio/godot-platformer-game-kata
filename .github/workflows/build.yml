@@ -42,7 +42,6 @@ jobs:
           
           wget -q ${templates_url} -O templates.tpz
           unzip templates.tpz -d /opt/godot && rm templates.tpz
-
       - name: configure
         run: |
           mv /opt/godot/Godot_v4.3-stable_linux.x86_64 /usr/local/bin/godot
@@ -52,19 +51,16 @@ jobs:
           mv /opt/godot/templates/* "${templates_dir}"
           file /home/runner/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable/linux_release.x86_64
           file /home/runner/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable/linux_debug.x86_64
-
       - name: build
         run: |
           mkdir -p build/
           godot --headless --export-release "Linux/X11"
-
       - name: export
         uses: actions/upload-artifact@v4
         with:
           name: build-x86_64
           path: |
             build/*
-
   build-macos:
     runs-on: macos-latest
     env:
@@ -92,7 +88,6 @@ jobs:
           
           wget -q ${templates_url} -O templates.tpz
           unzip templates.tpz -d /opt/godot && rm templates.tpz
-
       - name: configure
         run: |
           sudo mv /opt/godot/Godot.app /Applications/Godot.app
@@ -102,12 +97,10 @@ jobs:
           mkdir -p "${templates_dir}"
           mv /opt/godot/templates/macos.zip "${templates_dir}/macos.zip"
           file "${templates_dir}/macos.zip"
-
       - name: build
         run: |
           mkdir -p build/
           godot --headless --export-release "macOS"
-
       - name: export
         uses: actions/upload-artifact@v4
         with:
