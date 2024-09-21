@@ -1,0 +1,17 @@
+# https://github.com/github/gitignore/blob/main/Godot.gitignore
+.godot/
+.import/
+export.cfg
+*.translation
+.mono/
+data_*/
+mono_crash.*.json
+
+# debug
+savegame.bin
+
+# export
+build/
+
+# local
+.idea/

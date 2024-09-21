@@ -1,0 +1,91 @@
+name: Build Godot Project ZonaWarpa
+
+on:
+  push:
+    branches:
+      - main
+      - build-*
+
+concurrency:
+  cancel-in-progress: true
+  group: build
+
+env:
+  templates_url: "https://downloads.tuxfamily.org/godotengine/4.3/Godot_v4.3-stable_export_templates.tpz"
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      godot_url: "https://github.com/godotengine/godot/releases/download/4.3-stable/Godot_v4.3-stable_linux.x86_64.zip"
+      templates_dir: "/home/runner/.local/share/godot/export_templates/4.3.stable"
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: setup
+        run: |
+          mkdir /opt/godot && cd /opt/godot
+          wget -q "${godot_url}" -O godot.zip
+          unzip godot.zip && rm godot.zip
+          wget -q ${templates_url} -O templates.tpz
+          unzip templates.tpz -d /opt/godot && rm templates.tpz
+
+      - name: configure
+        run: |
+          mv /opt/godot/Godot_v4.3-stable_linux.x86_64 /usr/local/bin/godot
+          godot --version --headless
+          mkdir -p "${templates_dir}"
+          mv /opt/godot/templates/* "${templates_dir}"
+
+      - name: build
+        run: |
+          mkdir -p build/
+          godot --headless --export-release "Linux/X11"
+
+      - name: export
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-linux-x86_64
+          path: |
+            build/*
+
+  build-macos:
+    runs-on: macos-latest
+    timeout-minutes: 10
+    env:
+      godot_url: "https://downloads.tuxfamily.org/godotengine/4.3/Godot_v4.3-stable_macos.universal.zip"
+      templates_dir: "/Users/runner/Library/Application Support/Godot/export_templates/4.3.stable/"
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: setup
+        run: |
+          sudo mkdir /opt/godot && sudo chown -R $USER: /opt/godot
+          cd /opt/godot
+          wget -q "${godot_url}" -O godot.zip
+          unzip godot.zip && rm godot.zip
+          wget -q ${templates_url} -O templates.tpz
+          unzip templates.tpz -d /opt/godot && rm templates.tpz
+
+      - name: configure
+        run: |
+          sudo mv /opt/godot/Godot.app /Applications/Godot.app
+          sudo ln -s /Applications/Godot.app/Contents/MacOS/Godot /usr/local/bin/godot
+          godot --version --headless        
+          mkdir -p "${templates_dir}"
+          mv /opt/godot/templates/macos.zip "${templates_dir}/macos.zip"
+          file "${templates_dir}/macos.zip"
+
+      - name: build
+        run: |
+          mkdir -p build/
+          godot --headless --export-release "macOS"
+
+      - name: export
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-macOS
+          path: build/*
